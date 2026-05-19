@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Australia Tourism - FIT2179 DV2</title>
 
-  <!-- Vega libraries must load before your chart script -->
   <script src="https://cdn.jsdelivr.net/npm/vega@5.30.0"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.21.0"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.26.0"></script>
@@ -17,14 +16,12 @@
       margin: 0;
       padding: 20px;
     }
-
     h1 {
       text-align: center;
       color: #2c3e50;
       font-size: 42px;
       margin: 10px 0 15px;
     }
-
     .subtitle {
       text-align: center;
       color: #555;
@@ -33,7 +30,6 @@
       font-size: 26px;
       line-height: 1.15;
     }
-
     .chart-container {
       background: white;
       border-radius: 16px;
@@ -42,32 +38,24 @@
       max-width: 900px;
       box-shadow: 0 6px 18px rgba(0,0,0,0.12);
     }
-
     h2 {
       color: #2c3e50;
       margin: 0 0 10px;
       font-size: 32px;
       line-height: 1.1;
     }
-
     p {
       color: #555;
       margin: 0 0 18px;
       font-size: 24px;
       line-height: 1.15;
     }
-
     .source {
       font-size: 22px;
       color: #999;
       margin-top: 16px;
     }
-
-    .vis {
-      width: 100%;
-      min-height: 250px;
-    }
-
+    .vis { width: 100%; min-height: 250px; }
     footer {
       text-align: center;
       margin-top: 40px;
@@ -75,18 +63,13 @@
       color: #aaa;
       padding-bottom: 30px;
     }
-
-    .vega-embed, .vega-embed > div, .vega-embed svg {
-      max-width: 100%;
-    }
+    .vega-embed, .vega-embed > div, .vega-embed svg { max-width: 100%; }
   </style>
 </head>
 
 <body>
   <h1>Australia's Tourism in 2025</h1>
-  <p class="subtitle">
-    This visualisation explores international and domestic tourism in Australia using data from Tourism Research Australia.
-  </p>
+  <p class="subtitle">This visualisation explores international and domestic tourism in Australia using data from Tourism Research Australia.</p>
 
   <div class="chart-container">
     <h2>Top 10 Countries Visiting Australia</h2>
@@ -109,157 +92,258 @@
     <p class="source">Source: Tourism Research Australia, International Visitor Survey, Year ending December 2025</p>
   </div>
 
-  <script>
-    const embedOptions = {
-      actions: false,
-      renderer: "svg"
-    };
+  <div class="chart-container">
+    <h2>International vs Domestic Overnight Trips by State</h2>
+    <p>Domestic trips far outnumber international visits in every state. NSW and Victoria dominate both categories.</p>
+    <div id="compare-chart" class="vis"></div>
+    <p class="source">Source: Tourism Research Australia, International Visitor Survey & Domestic Tourism Statistics, 2025</p>
+  </div>
 
-    const barChart = {
-      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-      "width": 560,
-      "height": 280,
-      "data": {
-        "values": [
-          {"country": "New Zealand", "trips": 1302.8},
-          {"country": "China", "trips": 974.4},
-          {"country": "United Kingdom", "trips": 720.9},
-          {"country": "United States", "trips": 696.9},
-          {"country": "India", "trips": 429.2},
-          {"country": "Singapore", "trips": 385.6},
-          {"country": "Japan", "trips": 385.2},
-          {"country": "Korea", "trips": 362.6},
-          {"country": "Hong Kong", "trips": 228.2},
-          {"country": "Indonesia", "trips": 217.9}
-        ]
-      },
-      "layer": [
-        {
-          "mark": {"type": "bar", "color": "#3498db", "cornerRadiusEnd": 4},
-          "encoding": {
-            "y": {
-              "field": "country",
-              "type": "nominal",
-              "sort": "-x",
-              "axis": {"title": null, "labelFontSize": 18}
-            },
-            "x": {
-              "field": "trips",
-              "type": "quantitative",
-              "axis": null
-            },
-            "tooltip": [
-              {"field": "country", "title": "Country"},
-              {"field": "trips", "title": "Trips ('000)", "format": ",.1f"}
-            ]
-          }
-        },
-        {
-          "mark": {"type": "text", "align": "left", "dx": 8, "fontSize": 18, "color": "#3498db"},
-          "encoding": {
-            "y": {"field": "country", "type": "nominal", "sort": "-x"},
-            "x": {"field": "trips", "type": "quantitative"},
-            "text": {"field": "trips", "type": "quantitative", "format": ",.1f"}
-          }
+  <div class="chart-container">
+    <h2>Where Do International Visitors Stay?</h2>
+    <p>Rented apartments and friends/relatives properties are the most common accommodation types.</p>
+    <div id="accom-chart" class="vis"></div>
+    <p class="source">Source: Tourism Research Australia, International Visitor Survey, Year ending December 2025</p>
+  </div>
+
+  <div class="chart-container">
+    <h2>Top 20 Regions Visited by International Tourists</h2>
+    <p>Sydney dominates by a large margin. Melbourne and Brisbane follow, with regional areas also attracting significant visitors.</p>
+    <div id="regions-chart" class="vis"></div>
+    <p class="source">Source: Tourism Research Australia, International Visitor Survey, Year ending December 2025</p>
+  </div>
+
+  <footer>
+    FIT2179 A2 by Alexis Low | Monash University 2026 | Data from Tourism Research Australia &amp; ABS
+  </footer>
+
+<script>
+  const embedOptions = { actions: false, renderer: "svg" };
+
+  const barChart = {
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "width": 560, "height": 280,
+    "data": { "values": [
+      {"country": "New Zealand", "trips": 1302.8},
+      {"country": "China", "trips": 974.4},
+      {"country": "United Kingdom", "trips": 720.9},
+      {"country": "United States", "trips": 696.9},
+      {"country": "India", "trips": 429.2},
+      {"country": "Singapore", "trips": 385.6},
+      {"country": "Japan", "trips": 385.2},
+      {"country": "Korea", "trips": 362.6},
+      {"country": "Hong Kong", "trips": 228.2},
+      {"country": "Indonesia", "trips": 217.9}
+    ]},
+    "layer": [
+      {
+        "mark": {"type": "bar", "color": "#3498db", "cornerRadiusEnd": 4},
+        "encoding": {
+          "y": {"field": "country", "type": "nominal", "sort": "-x", "axis": {"title": null, "labelFontSize": 18}},
+          "x": {"field": "trips", "type": "quantitative", "axis": null},
+          "tooltip": [
+            {"field": "country", "title": "Country"},
+            {"field": "trips", "title": "Trips ('000)", "format": ",.1f"}
+          ]
         }
-      ],
-      "config": {
-        "view": {"stroke": null},
-        "axis": {"grid": false, "domain": false, "ticks": false}
-      }
-    };
-
-    const purposeChart = {
-      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-      "width": 560,
-      "height": 220,
-      "data": {
-        "values": [
-          {"reason": "Holiday", "trips": 3582.9},
-          {"reason": "VFR", "trips": 2780.0},
-          {"reason": "Business", "trips": 758.3},
-          {"reason": "Education", "trips": 539.7},
-          {"reason": "Employment", "trips": 349.2},
-          {"reason": "Other", "trips": 262.3}
-        ]
       },
-      "mark": {"type": "bar", "color": "#e67e22", "cornerRadiusEnd": 4},
-      "encoding": {
-        "x": {
-          "field": "reason",
-          "type": "nominal",
-          "sort": "-y",
-          "axis": {"title": null, "labelAngle": 0, "labelFontSize": 18}
-        },
-        "y": {
-          "field": "trips",
-          "type": "quantitative",
-          "axis": null
-        },
-        "tooltip": [
-          {"field": "reason", "title": "Reason"},
-          {"field": "trips", "title": "Trips ('000)", "format": ",.0f"}
-        ]
-      },
-      "config": {
-        "view": {"stroke": null},
-        "axis": {"grid": false, "domain": false, "ticks": false}
+      {
+        "mark": {"type": "text", "align": "left", "dx": 8, "fontSize": 18, "color": "#3498db"},
+        "encoding": {
+          "y": {"field": "country", "type": "nominal", "sort": "-x"},
+          "x": {"field": "trips", "type": "quantitative"},
+          "text": {"field": "trips", "type": "quantitative", "format": ",.1f"}
+        }
       }
-    };
+    ],
+    "config": {"view": {"stroke": null}, "axis": {"grid": false, "domain": false, "ticks": false}}
+  };
 
-    const spendChart = {
-      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-      "width": 560,
-      "height": 220,
-      "data": {
-        "values": [
-          {"state": "NSW", "spend": 15039.5},
-          {"state": "VIC", "spend": 9676.3},
-          {"state": "QLD", "spend": 7484.6},
-          {"state": "WA", "spend": 3405.0},
-          {"state": "SA", "spend": 1761.0},
-          {"state": "TAS", "spend": 711.6},
-          {"state": "ACT", "spend": 586.8},
-          {"state": "NT", "spend": 526.6}
-        ]
+  const purposeChart = {
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "width": 560, "height": 220,
+    "data": { "values": [
+      {"reason": "Holiday", "trips": 3582.9},
+      {"reason": "VFR", "trips": 2780.0},
+      {"reason": "Business", "trips": 758.3},
+      {"reason": "Education", "trips": 539.7},
+      {"reason": "Employment", "trips": 349.2},
+      {"reason": "Other", "trips": 262.3}
+    ]},
+    "mark": {"type": "bar", "color": "#e67e22", "cornerRadiusEnd": 4},
+    "encoding": {
+      "x": {"field": "reason", "type": "nominal", "sort": "-y", "axis": {"title": null, "labelAngle": 0, "labelFontSize": 18}},
+      "y": {"field": "trips", "type": "quantitative", "axis": null},
+      "tooltip": [
+        {"field": "reason", "title": "Reason"},
+        {"field": "trips", "title": "Trips ('000)", "format": ",.0f"}
+      ]
+    },
+    "config": {"view": {"stroke": null}, "axis": {"grid": false, "domain": false, "ticks": false}}
+  };
+
+  const spendChart = {
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "width": 560, "height": 220,
+    "data": { "values": [
+      {"state": "NSW", "spend": 15039.5},
+      {"state": "VIC", "spend": 9676.3},
+      {"state": "QLD", "spend": 7484.6},
+      {"state": "WA", "spend": 3405.0},
+      {"state": "SA", "spend": 1761.0},
+      {"state": "TAS", "spend": 711.6},
+      {"state": "ACT", "spend": 586.8},
+      {"state": "NT", "spend": 526.6}
+    ]},
+    "mark": {"type": "bar", "color": "#27ae60", "cornerRadiusEnd": 4},
+    "encoding": {
+      "x": {"field": "state", "type": "nominal", "sort": "-y", "axis": {"title": null, "labelAngle": 0, "labelFontSize": 18}},
+      "y": {"field": "spend", "type": "quantitative", "axis": null},
+      "tooltip": [
+        {"field": "state", "title": "State"},
+        {"field": "spend", "title": "Spend ($M)", "format": ",.0f"}
+      ]
+    },
+    "config": {"view": {"stroke": null}, "axis": {"grid": false, "domain": false, "ticks": false}}
+  };
+
+  const compareChart = {
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "width": 560, "height": 280,
+    "data": { "values": [
+      {"state": "NSW", "type": "International", "trips": 4110.4},
+      {"state": "NSW", "type": "Domestic", "trips": 10569.7},
+      {"state": "VIC", "type": "International", "trips": 2826.8},
+      {"state": "VIC", "type": "Domestic", "trips": 8043.5},
+      {"state": "QLD", "type": "International", "trips": 2368.5},
+      {"state": "QLD", "type": "Domestic", "trips": 6772.2},
+      {"state": "WA", "type": "International", "trips": 1068.1},
+      {"state": "WA", "type": "Domestic", "trips": 2563.0},
+      {"state": "SA", "type": "International", "trips": 445.4},
+      {"state": "SA", "type": "Domestic", "trips": 2049.9},
+      {"state": "TAS", "type": "International", "trips": 278.6},
+      {"state": "TAS", "type": "Domestic", "trips": 757.2},
+      {"state": "ACT", "type": "International", "trips": 198.5},
+      {"state": "ACT", "type": "Domestic", "trips": 585.7},
+      {"state": "NT", "type": "International", "trips": 254.7},
+      {"state": "NT", "type": "Domestic", "trips": 214.0}
+    ]},
+    "mark": {"type": "bar", "cornerRadiusEnd": 4},
+    "encoding": {
+      "x": {"field": "state", "type": "nominal", "axis": {"title": null, "labelFontSize": 18}},
+      "y": {"field": "trips", "type": "quantitative", "axis": {"title": "Trips ('000)", "labelFontSize": 16}},
+      "color": {
+        "field": "type", "type": "nominal",
+        "scale": {"domain": ["International", "Domestic"], "range": ["#3498db", "#e67e22"]},
+        "legend": {"title": null, "labelFontSize": 18}
       },
-      "mark": {"type": "bar", "color": "#27ae60", "cornerRadiusEnd": 4},
-      "encoding": {
-        "x": {
-          "field": "state",
-          "type": "nominal",
-          "sort": "-y",
-          "axis": {"title": null, "labelAngle": 0, "labelFontSize": 18}
-        },
-        "y": {
-          "field": "spend",
-          "type": "quantitative",
-          "axis": null
-        },
-        "tooltip": [
-          {"field": "state", "title": "State"},
-          {"field": "spend", "title": "Spend ($M)", "format": ",.0f"}
-        ]
+      "xOffset": {"field": "type", "type": "nominal"},
+      "tooltip": [
+        {"field": "state", "title": "State"},
+        {"field": "type", "title": "Type"},
+        {"field": "trips", "title": "Trips ('000)", "format": ",.1f"}
+      ]
+    },
+    "config": {"view": {"stroke": null}, "axis": {"grid": false, "domain": false, "ticks": false}}
+  };
+
+  const accomChart = {
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "width": 560, "height": 300,
+    "data": { "values": [
+      {"type": "Rented apartment/house", "nights": 114431.0},
+      {"type": "Friends/Relatives property", "nights": 98810.2},
+      {"type": "Hotel/Resort/Motel", "nights": 47644.5},
+      {"type": "Other private", "nights": 11225.7},
+      {"type": "Other accommodation", "nights": 11647.5},
+      {"type": "Backpacker/Hostel", "nights": 9295.9},
+      {"type": "Other commercial", "nights": 7960.5},
+      {"type": "Own property", "nights": 5122.3},
+      {"type": "Caravan park", "nights": 3388.9},
+      {"type": "Guest house/B&B", "nights": 1648.7},
+      {"type": "Caravan non-commercial", "nights": 1501.5}
+    ]},
+    "layer": [
+      {
+        "mark": {"type": "bar", "color": "#9b59b6", "cornerRadiusEnd": 4},
+        "encoding": {
+          "y": {"field": "type", "type": "nominal", "sort": "-x", "axis": {"title": null, "labelFontSize": 16}},
+          "x": {"field": "nights", "type": "quantitative", "axis": null},
+          "tooltip": [
+            {"field": "type", "title": "Accommodation"},
+            {"field": "nights", "title": "Nights ('000)", "format": ",.0f"}
+          ]
+        }
       },
-      "config": {
-        "view": {"stroke": null},
-        "axis": {"grid": false, "domain": false, "ticks": false}
+      {
+        "mark": {"type": "text", "align": "left", "dx": 6, "fontSize": 16, "color": "#9b59b6"},
+        "encoding": {
+          "y": {"field": "type", "type": "nominal", "sort": "-x"},
+          "x": {"field": "nights", "type": "quantitative"},
+          "text": {"field": "nights", "type": "quantitative", "format": ",.0f"}
+        }
       }
-    };
+    ],
+    "config": {"view": {"stroke": null}, "axis": {"grid": false, "domain": false, "ticks": false}}
+  };
 
-    document.addEventListener("DOMContentLoaded", function () {
-      if (typeof vegaEmbed === "undefined") {
-        document.body.insertAdjacentHTML(
-          "afterbegin",
-          "<p style='color:red;text-align:center'>Vega libraries did not load. Check your internet connection or script links.</p>"
-        );
-        return;
+  const regionsChart = {
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "width": 560, "height": 420,
+    "data": { "values": [
+      {"region": "Sydney", "trips": 3819.9},
+      {"region": "Melbourne", "trips": 2652.6},
+      {"region": "Brisbane & Gold Coast", "trips": 1784.6},
+      {"region": "Regional QLD", "trips": 1003.6},
+      {"region": "Regional NSW", "trips": 727.2},
+      {"region": "Perth", "trips": 950.3},
+      {"region": "Adelaide", "trips": 380.2},
+      {"region": "Regional VIC", "trips": 422.5},
+      {"region": "Regional WA", "trips": 310.4},
+      {"region": "Darwin", "trips": 198.6},
+      {"region": "Hobart", "trips": 210.4},
+      {"region": "Canberra", "trips": 198.5},
+      {"region": "Cairns", "trips": 320.1},
+      {"region": "Tropical North QLD", "trips": 280.3},
+      {"region": "Whitsundays", "trips": 190.2},
+      {"region": "Hunter Valley", "trips": 145.3},
+      {"region": "Byron Bay", "trips": 132.1},
+      {"region": "Barossa Valley", "trips": 98.4},
+      {"region": "Kangaroo Island", "trips": 76.2},
+      {"region": "Margaret River", "trips": 110.5}
+    ]},
+    "layer": [
+      {
+        "mark": {"type": "bar", "color": "#e74c3c", "cornerRadiusEnd": 4},
+        "encoding": {
+          "y": {"field": "region", "type": "nominal", "sort": "-x", "axis": {"title": null, "labelFontSize": 15}},
+          "x": {"field": "trips", "type": "quantitative", "axis": null},
+          "tooltip": [
+            {"field": "region", "title": "Region"},
+            {"field": "trips", "title": "Trips ('000)", "format": ",.1f"}
+          ]
+        }
+      },
+      {
+        "mark": {"type": "text", "align": "left", "dx": 6, "fontSize": 15, "color": "#e74c3c"},
+        "encoding": {
+          "y": {"field": "region", "type": "nominal", "sort": "-x"},
+          "x": {"field": "trips", "type": "quantitative"},
+          "text": {"field": "trips", "type": "quantitative", "format": ",.1f"}
+        }
       }
+    ],
+    "config": {"view": {"stroke": null}, "axis": {"grid": false, "domain": false, "ticks": false}}
+  };
 
-      vegaEmbed("#bar-chart", barChart, embedOptions).catch(console.error);
-      vegaEmbed("#purpose-chart", purposeChart, embedOptions).catch(console.error);
-      vegaEmbed("#spend-chart", spendChart, embedOptions).catch(console.error);
-    });
-  </script>
+  document.addEventListener("DOMContentLoaded", function () {
+    vegaEmbed("#bar-chart", barChart, embedOptions).catch(console.error);
+    vegaEmbed("#purpose-chart", purposeChart, embedOptions).catch(console.error);
+    vegaEmbed("#spend-chart", spendChart, embedOptions).catch(console.error);
+    vegaEmbed("#compare-chart", compareChart, embedOptions).catch(console.error);
+    vegaEmbed("#accom-chart", accomChart, embedOptions).catch(console.error);
+    vegaEmbed("#regions-chart", regionsChart, embedOptions).catch(console.error);
+  });
+</script>
 </body>
 </html>
