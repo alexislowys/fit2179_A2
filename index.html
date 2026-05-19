@@ -13,19 +13,16 @@
       margin: 0;
       padding: 20px;
     }
-
     h1 {
       text-align: center;
       color: #2c3e50;
     }
-
-    p {
-      max-width: 800px;
-      margin: 0 auto 20px auto;
-      color: #555;
+    .subtitle {
       text-align: center;
+      color: #555;
+      max-width: 700px;
+      margin: 0 auto 30px auto;
     }
-
     .chart-container {
       background: white;
       border-radius: 8px;
@@ -34,57 +31,62 @@
       max-width: 900px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
-
-    h2 {
-      color: #2c3e50;
-      margin-bottom: 8px;
-    }
-
+    h2 { color: #2c3e50; margin-bottom: 8px; }
+    p { color: #555; margin-bottom: 12px; }
     .source {
       font-size: 12px;
       color: #999;
       margin-top: 8px;
     }
-
     footer {
       text-align: center;
       margin-top: 40px;
       font-size: 13px;
       color: #aaa;
+      padding-bottom: 30px;
     }
+    .vega-embed { width: 100% !important; }
   </style>
 </head>
 <body>
 
-  <h1>Australia's Tourism in 2025</h1>
-  <p>This visualisation explores international and domestic tourism in Australia using data from Tourism Research Australia.</p>
+<h1>Australia's Tourism in 2025</h1>
+<p class="subtitle">This visualisation explores international and domestic tourism in Australia using data from Tourism Research Australia and the Australian Bureau of Statistics.</p>
 
-  <div class="chart-container">
-    <h2>Top 10 Countries Visiting Australia</h2>
-    <p>New Zealand is the biggest source of international visitors, followed by China and the UK.</p>
-    <div id="bar-chart"></div>
-    <p class="source">Source: Tourism Research Australia, International Visitor Survey, Year ending December 2025</p>
-  </div>
+<div class="chart-container">
+  <h2>Top 10 Countries Visiting Australia</h2>
+  <p>New Zealand is the biggest source of international visitors, followed by China and the UK. Together they make up nearly half of all international trips to Australia.</p>
+  <div id="bar-chart"></div>
+  <p class="source">Source: Tourism Research Australia, International Visitor Survey, Year ending December 2025</p>
+</div>
 
-  <div class="chart-container">
-    <h2>Why Do People Visit Australia?</h2>
-    <p>Most international visitors come for a holiday, but visiting friends and relatives is also very common.</p>
-    <div id="purpose-chart"></div>
-    <p class="source">Source: Tourism Research Australia, International Visitor Survey, Year ending December 2025</p>
-  </div>
+<div class="chart-container">
+  <h2>Why Do People Visit Australia?</h2>
+  <p>Most international visitors come for a holiday, but visiting friends and relatives is also very common. Education is a significant category too, reflecting Australia's large international student population.</p>
+  <div id="purpose-chart"></div>
+  <p class="source">Source: Tourism Research Australia, International Visitor Survey, Year ending December 2025</p>
+</div>
 
-  <div class="chart-container">
-    <h2>Domestic Overnight Trips by State (Dec Quarter 2025)</h2>
-    <p>NSW and Victoria receive the most domestic overnight visitors. Hover over the map to see details.</p>
-    <div id="map-chart"></div>
-    <p class="source">Source: Tourism Research Australia, Domestic Tourism Statistics, December Quarter 2025</p>
-  </div>
+<div class="chart-container">
+  <h2>International Visitor Spend by State (2025)</h2>
+  <p>NSW attracts the most international spend, largely driven by Sydney. Western Australia saw the strongest growth in 2025, up 23% in visitor numbers compared to 2024.</p>
+  <div id="spend-chart"></div>
+  <p class="source">Source: Tourism Research Australia, International Visitor Survey, Year ending December 2025</p>
+</div>
 
-  <footer>
-    FIT2179 Data Visualisation 2 | Monash University 2026 | Data from Tourism Research Australia & ABS
-  </footer>
+<div class="chart-container">
+  <h2>Domestic Overnight Trips by State (Dec Quarter 2025)</h2>
+  <p>Australian residents took 29.5 million overnight trips in the December quarter 2025. NSW and Victoria dominate domestic travel.</p>
+  <div id="map-chart"></div>
+  <p class="source">Source: Tourism Research Australia, Domestic Tourism Statistics, December Quarter 2025</p>
+</div>
+
+<footer>
+  FIT2179 A2 by Alexis Low | Monash University 2026 | Data from Tourism Research Australia &amp; ABS
+</footer>
 
 <script>
+window.addEventListener('load', function() {
 
   // Chart 1: Top 10 countries
   vegaEmbed('#bar-chart', {
@@ -160,18 +162,55 @@
     }
   }, {actions: false});
 
-  // Chart 3: Map of domestic trips by state
+  // Chart 3: Spend by state
+  vegaEmbed('#spend-chart', {
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "width": "container",
+    "height": 280,
+    "data": {
+      "values": [
+        {"state": "NSW", "spend": 15039.5},
+        {"state": "VIC", "spend": 9676.3},
+        {"state": "QLD", "spend": 7484.6},
+        {"state": "WA", "spend": 3405.0},
+        {"state": "SA", "spend": 1761.0},
+        {"state": "TAS", "spend": 711.6},
+        {"state": "ACT", "spend": 586.8},
+        {"state": "NT", "spend": 526.6}
+      ]
+    },
+    "mark": {"type": "bar", "color": "#27ae60"},
+    "encoding": {
+      "x": {
+        "field": "state",
+        "type": "nominal",
+        "sort": "-y",
+        "axis": {"title": null}
+      },
+      "y": {
+        "field": "spend",
+        "type": "quantitative",
+        "axis": {"title": "Spend ($M)"}
+      },
+      "tooltip": [
+        {"field": "state", "title": "State"},
+        {"field": "spend", "title": "Spend ($M)", "format": ",.0f"}
+      ]
+    }
+  }, {actions: false});
+
+  // Chart 4: Map
   vegaEmbed('#map-chart', {
     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "width": "container",
     "height": 400,
     "data": {
-      "url": "https://raw.githubusercontent.com/tonywr71/GeoJson-Data/master/australian-states.json",
-      "format": {"type": "topojson", "feature": "australian-states"}
+      "url": "https://raw.githubusercontent.com/matthewproctor/australianpostcodes/master/australian_states.geojson",
+      "format": {"type": "json", "property": "features"}
     },
     "transform": [
       {
-        "lookup": "properties.STATE_NAME",
+        "lookup": "properties.name",
         "from": {
           "data": {
             "values": [
@@ -200,12 +239,13 @@
         "legend": {"title": "Overnight Trips ('000)"}
       },
       "tooltip": [
-        {"field": "properties.STATE_NAME", "title": "State"},
+        {"field": "properties.name", "title": "State"},
         {"field": "trips", "title": "Overnight Trips ('000)", "format": ",.0f"}
       ]
     }
   }, {actions: false});
 
+});
 </script>
 </body>
 </html>
