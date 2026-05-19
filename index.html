@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Australia Tourism - FIT2179 DV2</title>
+  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+    }
+
+    p {
+      max-width: 800px;
+      margin: 0 auto 20px auto;
+      color: #555;
+      text-align: center;
+    }
+
+    .chart-container {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px auto;
+      max-width: 900px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      color: #2c3e50;
+      margin-bottom: 8px;
+    }
+
+    .source {
+      font-size: 12px;
+      color: #999;
+      margin-top: 8px;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 13px;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Australia's Tourism in 2025</h1>
+  <p>This visualisation explores international and domestic tourism in Australia using data from Tourism Research Australia.</p>
+
+  <div class="chart-container">
+    <h2>Top 10 Countries Visiting Australia</h2>
+    <p>New Zealand is the biggest source of international visitors, followed by China and the UK.</p>
+    <div id="bar-chart"></div>
+    <p class="source">Source: Tourism Research Australia, International Visitor Survey, Year ending December 2025</p>
+  </div>
+
+  <div class="chart-container">
+    <h2>Why Do People Visit Australia?</h2>
+    <p>Most international visitors come for a holiday, but visiting friends and relatives is also very common.</p>
+    <div id="purpose-chart"></div>
+    <p class="source">Source: Tourism Research Australia, International Visitor Survey, Year ending December 2025</p>
+  </div>
+
+  <div class="chart-container">
+    <h2>Domestic Overnight Trips by State (Dec Quarter 2025)</h2>
+    <p>NSW and Victoria receive the most domestic overnight visitors. Hover over the map to see details.</p>
+    <div id="map-chart"></div>
+    <p class="source">Source: Tourism Research Australia, Domestic Tourism Statistics, December Quarter 2025</p>
+  </div>
+
+  <footer>
+    FIT2179 Data Visualisation 2 | Monash University 2026 | Data from Tourism Research Australia & ABS
+  </footer>
+
+<script>
+
+  // Chart 1: Top 10 countries
+  vegaEmbed('#bar-chart', {
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "width": "container",
+    "height": 300,
+    "data": {
+      "values": [
+        {"country": "New Zealand", "trips": 1302.8},
+        {"country": "China", "trips": 974.4},
+        {"country": "United Kingdom", "trips": 720.9},
+        {"country": "United States", "trips": 696.9},
+        {"country": "India", "trips": 429.2},
+        {"country": "Singapore", "trips": 385.6},
+        {"country": "Japan", "trips": 385.2},
+        {"country": "Korea", "trips": 362.6},
+        {"country": "Hong Kong", "trips": 228.2},
+        {"country": "Indonesia", "trips": 217.9}
+      ]
+    },
+    "mark": {"type": "bar", "color": "#3498db"},
+    "encoding": {
+      "y": {
+        "field": "country",
+        "type": "nominal",
+        "sort": "-x",
+        "axis": {"title": null}
+      },
+      "x": {
+        "field": "trips",
+        "type": "quantitative",
+        "axis": {"title": "Trips (thousands)"}
+      },
+      "tooltip": [
+        {"field": "country", "title": "Country"},
+        {"field": "trips", "title": "Trips ('000)", "format": ",.1f"}
+      ]
+    }
+  }, {actions: false});
+
+  // Chart 2: Purpose of visit
+  vegaEmbed('#purpose-chart', {
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "width": "container",
+    "height": 280,
+    "data": {
+      "values": [
+        {"reason": "Holiday", "trips": 3582.9},
+        {"reason": "Visiting Friends & Relatives", "trips": 2780.0},
+        {"reason": "Business", "trips": 758.3},
+        {"reason": "Education", "trips": 539.7},
+        {"reason": "Employment", "trips": 349.2},
+        {"reason": "Other", "trips": 262.3}
+      ]
+    },
+    "mark": {"type": "bar", "color": "#e67e22"},
+    "encoding": {
+      "x": {
+        "field": "reason",
+        "type": "nominal",
+        "sort": "-y",
+        "axis": {"title": null, "labelAngle": -20}
+      },
+      "y": {
+        "field": "trips",
+        "type": "quantitative",
+        "axis": {"title": "Trips (thousands)"}
+      },
+      "tooltip": [
+        {"field": "reason", "title": "Reason"},
+        {"field": "trips", "title": "Trips ('000)", "format": ",.0f"}
+      ]
+    }
+  }, {actions: false});
+
+  // Chart 3: Map of domestic trips by state
+  vegaEmbed('#map-chart', {
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "width": "container",
+    "height": 400,
+    "data": {
+      "url": "https://raw.githubusercontent.com/tonywr71/GeoJson-Data/master/australian-states.json",
+      "format": {"type": "topojson", "feature": "australian-states"}
+    },
+    "transform": [
+      {
+        "lookup": "properties.STATE_NAME",
+        "from": {
+          "data": {
+            "values": [
+              {"state": "New South Wales", "trips": 10569.7},
+              {"state": "Victoria", "trips": 8043.5},
+              {"state": "Queensland", "trips": 6772.2},
+              {"state": "Western Australia", "trips": 2563.0},
+              {"state": "South Australia", "trips": 2049.9},
+              {"state": "Tasmania", "trips": 757.2},
+              {"state": "Northern Territory", "trips": 214.0},
+              {"state": "Australian Capital Territory", "trips": 585.7}
+            ]
+          },
+          "key": "state",
+          "fields": ["trips"]
+        }
+      }
+    ],
+    "projection": {"type": "mercator"},
+    "mark": {"type": "geoshape", "stroke": "white", "strokeWidth": 1},
+    "encoding": {
+      "color": {
+        "field": "trips",
+        "type": "quantitative",
+        "scale": {"scheme": "blues"},
+        "legend": {"title": "Overnight Trips ('000)"}
+      },
+      "tooltip": [
+        {"field": "properties.STATE_NAME", "title": "State"},
+        {"field": "trips", "title": "Overnight Trips ('000)", "format": ",.0f"}
+      ]
+    }
+  }, {actions: false});
+
+</script>
+</body>
+</html>
